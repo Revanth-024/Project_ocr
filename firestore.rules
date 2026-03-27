@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: documents
+    // Document ID: {docId}
+    // Fields:
+    //   - id: string (required)
+    //   - title: string (required)
+    //   - subjectName: string (optional)
+    //   - date: string (required, ISO 8601)
+    //   - imageUrl: string (optional)
+    //   - extractedText: string (required)
+    //   - language: string (optional)
+    //   - summary: string (optional)
+    //   - status: string (required, enum)
+    //   - uid: string (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.uid;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "revanthm180@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidDocument(data) {
+      return data.keys().hasAll(['id', 'title', 'date', 'extractedText', 'uid', 'status']) &&
+             data.id is string && data.id.size() > 0 &&
+             data.title is string && data.title.size() > 0 && data.title.size() < 200 &&
+             data.extractedText is string && data.extractedText.size() < 100000 &&
+             data.uid == request.auth.uid &&
+             data.status in ['processed', 'pending', 'error'];
+    }
+
+    match /documents/{docId} {
+      // Users can read their own documents, admins can read all
+      allow read: if isAuthenticated() && (isDocOwner() || isAdmin());
+      
+      // Users can create their own documents
+      allow create: if isAuthenticated() && isValidDocument(request.resource.data);
+      
+      // Users can update their own documents, admins can update all
+      allow update: if isAuthenticated() && 
+                    ((isDocOwner() && isValidDocument(request.resource.data)) || isAdmin());
+      
+      // Users can delete their own documents, admins can delete all
+      allow delete: if isAuthenticated() && (isDocOwner() || isAdmin());
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow write: if isAdmin();
+    }
+  }
+}

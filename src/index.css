@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Playfair Display", serif;
+  
+  --color-brand-bg: var(--brand-bg);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-border: var(--brand-border);
+  --color-brand-muted: var(--brand-muted);
+}
+
+@layer base {
+  :root {
+    --brand-bg: #fdfdfc;
+    --brand-ink: #0a0a0a;
+    --brand-accent: #111111;
+    --brand-border: rgba(0, 0, 0, 0.06);
+    --brand-muted: #8e8e8e;
+  }
+
+  .dark {
+    --brand-bg: #0a0a0a;
+    --brand-ink: #fdfdfc;
+    --brand-accent: #ffffff;
+    --brand-border: rgba(255, 255, 255, 0.1);
+    --brand-muted: #a1a1aa;
+  }
+
+  body {
+    @apply bg-brand-bg text-brand-ink font-sans antialiased selection:bg-brand-accent selection:text-brand-bg transition-colors duration-300;
+  }
+}
+
+.glass-panel {
+  @apply bg-white/80 backdrop-blur-2xl border border-brand-border shadow-[0_4px_24px_rgba(0,0,0,0.03)];
+}
+.dark .glass-panel {
+  @apply bg-black/40 border-brand-border shadow-[0_4px_24px_rgba(0,0,0,0.2)];
+}
+
+.card-hover {
+  @apply transition-all duration-500 ease-out hover:shadow-[0_32px_64px_rgba(0,0,0,0.08)] hover:-translate-y-1;
+}
+.dark .card-hover {
+  @apply hover:shadow-[0_32px_64px_rgba(0,0,0,0.4)] hover:bg-white/5;
+}
+
+.col-header {
+  @apply text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 bg-zinc-50/50 py-3 px-4;
+}
+.dark .col-header {
+  @apply text-zinc-400 bg-zinc-900/50;
+}
+
+.data-value {
+  @apply font-mono text-[11px] tracking-tight text-brand-ink/70;
+}
+
+.btn-primary {
+  @apply bg-brand-accent text-brand-bg px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-95 flex items-center gap-2 shadow-lg shadow-brand-accent/10;
+}
+.dark .btn-primary {
+  @apply shadow-brand-accent/10;
+}
+
+.btn-secondary {
+  @apply bg-white text-brand-ink border border-brand-border px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 hover:bg-brand-bg active:scale-95 flex items-center gap-2;
+}
+.dark .btn-secondary {
+  @apply bg-zinc-900 border-brand-border hover:bg-zinc-800;
+}
+
+.status-badge {
+  @apply px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest flex items-center gap-2 border;
+}
+
+.sidebar-rail {
+  writing-mode: vertical-rl;
+  @apply rotate-180 text-[10px] font-bold uppercase tracking-[0.3em] text-brand-muted;
+}
+
+.title-display {
+  @apply font-serif italic text-4xl sm:text-7xl tracking-tighter leading-[0.85];
+}
+
+.micro-label {
+  @apply text-[9px] font-bold uppercase tracking-[0.25em] text-brand-muted;
+}

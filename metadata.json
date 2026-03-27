@@ -1,0 +1,5 @@
+{
+  "name": "Doc Digitizer",
+  "description": "AI-powered OCR and translation for historical handwritten records and official police archives.",
+  "requestFramePermissions": ["camera"]
+}

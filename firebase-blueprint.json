@@ -1,0 +1,28 @@
+{
+  "entities": {
+    "DocumentRecord": {
+      "title": "DocumentRecord",
+      "description": "A digitized handwritten document record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier" },
+        "title": { "type": "string", "description": "Document title" },
+        "subjectName": { "type": "string", "description": "Name of the person mentioned or officer" },
+        "date": { "type": "string", "format": "date-time", "description": "Creation date" },
+        "imageUrl": { "type": "string", "description": "Base64 or storage URL of the document" },
+        "extractedText": { "type": "string", "description": "OCR transcribed text" },
+        "language": { "type": "string", "description": "Identified language" },
+        "summary": { "type": "string", "description": "AI summary" },
+        "status": { "type": "string", "enum": ["processed", "pending", "error"], "description": "Processing status" },
+        "uid": { "type": "string", "description": "Owner's user ID" }
+      },
+      "required": ["id", "title", "date", "extractedText", "uid"]
+    }
+  },
+  "firestore": {
+    "/documents/{docId}": {
+      "schema": "DocumentRecord",
+      "description": "Collection of digitized documents"
+    }
+  }
+}
